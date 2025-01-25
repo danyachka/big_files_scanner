@@ -1,0 +1,7 @@
+
+enum SizedFileSystemEntityType {
+
+  file,
+
+  directory
+}
