@@ -10,13 +10,18 @@ void main(List<String> args) async {
 
   final path = args[0];
 
+  print("Loading...");
+  final timeStarted = DateTime.now().millisecondsSinceEpoch;
+
   final counter = Counter(startPath: path);
   await counter.calculate();
 
   counter.printResults(0);
+  print("Process took ${((DateTime.now().millisecondsSinceEpoch - timeStarted).toDouble()/1000)} sec");
 
   while (true) {
     final command = stdin.readLineSync(encoding: utf8);
+    print('');
 
     switch (command?.toLowerCase()) {
       case Counter.exitString:

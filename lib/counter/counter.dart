@@ -31,9 +31,11 @@ class Counter {
   void printResults(int at) {
     ResultsPrinter printer;
     if (resultsPrinters.isEmpty) {
-      printer = ResultsPrinter(entity: startEntity);
+      printer = ResultsPrinter(path: '', entity: startEntity);
     } else {
-      final resultAt = resultsPrinters.last.getResultAt(at);
+      final lastPrinter = resultsPrinters.last;
+
+      final resultAt = lastPrinter.getResultAt(at);
       if (resultAt == null) {
         print("Invalid index");
         return;
@@ -44,7 +46,7 @@ class Counter {
         return;
       }
 
-      printer = ResultsPrinter(entity: resultAt);
+      printer = ResultsPrinter(path: lastPrinter.path, entity: resultAt);
     }
 
     resultsPrinters.add(printer);
