@@ -29,7 +29,7 @@ void startDirAnalyzing(List<String> args) async {
     ? RememberingCounter(startPath: path) 
     : EcoCounter(startPath: path);
 
-  await counter.calculateSize(path);
+  if (!await counter.calculateSize(path)) return;
 
   processCommands(counter);
 }

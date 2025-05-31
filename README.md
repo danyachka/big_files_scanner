@@ -1,7 +1,7 @@
 ## **Files scanner**
 
 This script is created for analyzing directories to find big weighted ones.
-```
+```BASH
 ➜  big_files_scanner git:(main) ✗ ./output/scanner.exe /home/kisik                 
 Loading...
 0   | directory : Music_______________________________ - 0.0     B
@@ -38,3 +38,11 @@ Process took 0.326 sec
  - To exit type - exit
 
 Use flag --remember to start with much higher (much higher!) memory usage but with faster directories opening
+
+To produce a self-contained executable file:
+
+```dart compile exe ./bin/big_files_scanner.dart -o output/scanner.exe```
+
+Or run in JIT mode:
+
+```dart run ./bin/big_files_scanner.dart *path*```

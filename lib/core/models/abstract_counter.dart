@@ -13,9 +13,12 @@ abstract class AbstractCounter<T extends AbstractFileEntity> {
 
   AbstractCounter({required this.startPath});
 
-  Future<void> calculateSize(String path) async {
+  Future<bool> calculateSize(String path) async {
     final directory = Directory(path);
-    assert(await directory.exists(), "Directory doesn't exist");
+    if (!await directory.exists()) {
+      print("Directory doesn't exist");
+      return false;
+    }
 
     print("Loading...");
     final timeStarted = DateTime.now().millisecondsSinceEpoch;
@@ -24,6 +27,8 @@ abstract class AbstractCounter<T extends AbstractFileEntity> {
 
     printResults();
     print("Process took ${((DateTime.now().millisecondsSinceEpoch - timeStarted).toDouble()/1000)} sec");
+
+    return true;
   }
 
   void printResults() => resultsPrinters.last.printResults();
