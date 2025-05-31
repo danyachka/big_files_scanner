@@ -5,11 +5,7 @@ import 'dart:io';
 
 import 'package:big_files_scanner/counter/counter.dart';
 
-void main(List<String> args) async {
-  assert(args.length == 1, "Path should be given as a single argument!");
-
-  final path = args[0];
-
+void scanPath(String path) async {
   print("Loading...");
   final timeStarted = DateTime.now().millisecondsSinceEpoch;
 
@@ -21,6 +17,7 @@ void main(List<String> args) async {
 
   while (true) {
     final command = stdin.readLineSync(encoding: utf8);
+    
     print('');
 
     switch (command?.toLowerCase()) {
