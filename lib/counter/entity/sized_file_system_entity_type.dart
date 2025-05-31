@@ -1,7 +1,0 @@
-
-enum SizedFileSystemEntityType {
-
-  file,
-
-  directory
-}
