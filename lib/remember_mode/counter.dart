@@ -2,7 +2,7 @@
 
 import 'dart:io';
 
-import 'package:big_files_scanner/default/entity/remembering_sized_file_system_entity.dart';
+import 'package:big_files_scanner/remember_mode/entity/remembering_sized_file_system_entity.dart';
 import 'package:big_files_scanner/core/results_printer.dart';
 import 'package:big_files_scanner/core/models/abstract_counter.dart';
 

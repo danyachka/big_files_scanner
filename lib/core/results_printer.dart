@@ -66,7 +66,9 @@ String _bytesToHumanReadable(int bytes) {
 }
 
 void printHelp() {
-  print("Go back - $goBackString\nTo open folder type index\nTo exit print $exitString");
+  print("This script is created for analyzing directories to find big weighted ones.");
+  print("Go back - $goBackString\nTo open folder type its index\nTo exit type $exitString");
+  print("Use flag --remember to start program with much higher (much higher!) memory usage but with faster directories opening");
 }
 
 extension FileExtention on FileSystemEntity {

@@ -3,12 +3,22 @@ import 'dart:io';
 
 import 'package:big_files_scanner/core/models/abstract_counter.dart';
 import 'package:big_files_scanner/core/results_printer.dart';
-import 'package:big_files_scanner/default/counter.dart';
-import 'package:big_files_scanner/eco/eco_counter.dart';
+import 'package:big_files_scanner/remember_mode/counter.dart';
+import 'package:big_files_scanner/eco_mode/eco_counter.dart';
 
-void main(List<String> args) async {
-  assert(args.isNotEmpty, "Path should be given!");
+void main(List<String> args) {
+  if (args.isEmpty) {
+    print("Path should be given!");
+    return;
+  } else if (args[0] == "--help" || args[0] == "-h") {
+    printHelp();
+    return;
+  }
+  
+  startDirAnalyzing(args);
+}
 
+void startDirAnalyzing(List<String> args) async {
   final path = args.last;
   
   final type = args.contains("--remember")

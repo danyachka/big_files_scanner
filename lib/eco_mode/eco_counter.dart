@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:big_files_scanner/core/models/abstract_counter.dart';
 import 'package:big_files_scanner/core/results_printer.dart';
-import 'package:big_files_scanner/eco/entity/eco_sized_file_system_entity.dart';
+import 'package:big_files_scanner/eco_mode/entity/eco_sized_file_system_entity.dart';
 
 class EcoCounter extends AbstractCounter<EcoSizedFileSystemEntity> {
 
