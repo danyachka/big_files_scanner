@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:big_files_scanner/core/models/abstract_file_entity.dart';
+import 'package:big_files_scanner/core/results_printer.dart';
 
 class RememberingSizedFileSystemEntity extends AbstractFileEntity {
 
@@ -11,7 +12,11 @@ class RememberingSizedFileSystemEntity extends AbstractFileEntity {
   @override
   int get size => _size;
 
-  RememberingSizedFileSystemEntity({required super.entity}) : _entity = entity;
+  final String _name;
+  @override
+  String get name => _name;
+
+  RememberingSizedFileSystemEntity({required super.entity}) : _entity = entity, _name = entity.name;
 
   late final List<RememberingSizedFileSystemEntity> list;
 
@@ -21,7 +26,11 @@ class RememberingSizedFileSystemEntity extends AbstractFileEntity {
     _entity = null;
 
     if (entity is File) {
-      _size = entity.lengthSync();
+      try {
+        _size = await entity.length().timeout(fileLenWaitTimeout);
+      } catch (e) {
+        _size = 0;
+      }
       return size;
     }
 

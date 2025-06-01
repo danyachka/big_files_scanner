@@ -1,8 +1,10 @@
 
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:big_files_scanner/core/models/abstract_file_entity.dart';
+import 'package:big_files_scanner/core/results_printer.dart';
 
 class EcoSizedFileSystemEntity extends AbstractFileEntity {
 
@@ -10,16 +12,22 @@ class EcoSizedFileSystemEntity extends AbstractFileEntity {
   @override
   int get size => _size;
 
-  final FileSystemEntity _entity;
-  FileSystemEntity get entity => _entity;
+  FileSystemEntity? _entity;
+  final String path;
 
-  EcoSizedFileSystemEntity({required super.entity}) : _entity = entity;
+  @override
+  String get name => getLastPartOfPath(path);
 
-  EcoSizedFileSystemEntity.sized({required super.entity, required int size}) : _entity = entity, _size = size;
+  EcoSizedFileSystemEntity({required super.entity}) 
+    : _entity = entity, path = entity.absolute.path;
+
+  EcoSizedFileSystemEntity.sized({required super.entity, required int size}) 
+    : _entity = entity, path = entity.absolute.path, _size = size;
 
   @override
   Future<int> calculateSize() async {
     final entity = _entity;
+    _entity = null;
 
     if (entity is File) {
       _size += entity.lengthSync();
@@ -28,23 +36,25 @@ class EcoSizedFileSystemEntity extends AbstractFileEntity {
 
     if (entity is! Directory) return 0;
 
-    int totalCount = 0;
-    int totalCalculatedCount = 0;
-    
-    await entity.list(recursive: true).listen((data) {
-      if (data is! File) return;
-      totalCount++;
+    Completer<void> streamCompleter = Completer();
+    entity.list(recursive: true).listen(
+      (data) {
+        if (data is! File) return;
 
-      data.length().then((s) {
-        _size += s;
-        totalCalculatedCount++;
-      });
-    }).asFuture();
+        data.length().timeout(fileLenWaitTimeout).then(
+          (s) => _size += s,
+          onError: (error) => print("oops!")
+        );
+      },
+      onError: (e) {
+        print("Problems occurred reading read in $path");
+      },
+      onDone: () {
+        streamCompleter.complete();
+      },
+    );
 
-    while (totalCount != totalCalculatedCount) { // shit realization
-      await Future.delayed(const Duration(milliseconds: 10));
-    }
-
+    await streamCompleter.future;
     return _size;
   }
 

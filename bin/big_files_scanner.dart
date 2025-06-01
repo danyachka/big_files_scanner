@@ -26,8 +26,8 @@ void startDirAnalyzing(List<String> args) async {
     : CounterType.ecoCounter;
 
   final AbstractCounter counter = type == CounterType.rememberingCounter
-    ? RememberingCounter(startPath: path) 
-    : EcoCounter(startPath: path);
+    ? RememberingCounter() 
+    : EcoCounter();
 
   if (!await counter.calculateSize(path)) return;
 
@@ -44,7 +44,7 @@ void processCommands(AbstractCounter counter) async {
       case exitString:
         return;
       case goBackString:
-        counter.goUp();
+        await counter.goUp();
         break;
       case printHelpString:
         printHelp();

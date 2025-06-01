@@ -2,22 +2,20 @@
 
 import 'dart:io';
 
-import 'package:big_files_scanner/core/results_printer.dart';
+const fileLenWaitTimeout = Duration(milliseconds: 1000);
 
 abstract class AbstractFileEntity {
 
   int get size;
-
-  final String name;
 
   final SizedFileSystemEntityType type;
   bool get isDirectory => type == SizedFileSystemEntityType.directory;
 
   AbstractFileEntity({
     required FileSystemEntity entity
-  }) : name = entity.name,
-    type = (entity is File)? SizedFileSystemEntityType.file : SizedFileSystemEntityType.directory;
+  }) : type = (entity is File)? SizedFileSystemEntityType.file : SizedFileSystemEntityType.directory;
 
+  String get name;
 
   Future<int> calculateSize();
 }

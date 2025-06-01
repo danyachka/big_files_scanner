@@ -8,19 +8,19 @@ import 'package:big_files_scanner/core/models/abstract_counter.dart';
 
 class RememberingCounter extends AbstractCounter<RememberingSizedFileSystemEntity> {
 
-  RememberingCounter({required super.startPath});
+  final List<ResultsPrinter<RememberingSizedFileSystemEntity>> _resultsPrinters = [];
 
   @override
   Future<void> calculate(Directory directory) async {
     final startEntity = RememberingSizedFileSystemEntity(entity: directory);
     await startEntity.calculateSize();
 
-    resultsPrinters.add(ResultsPrinter(path: directory.path, entity: startEntity, list: startEntity.list));
+    _resultsPrinters.add(ResultsPrinter(path: directory.path, entity: startEntity, list: startEntity.list));
   }
 
   @override
   Future<void> goTo(int at) async {
-    final lastPrinter = resultsPrinters.last;
+    final lastPrinter = _resultsPrinters.last;
 
     final entityAt = lastPrinter.getEntityAt(at);
     if (entityAt == null) {
@@ -36,7 +36,21 @@ class RememberingCounter extends AbstractCounter<RememberingSizedFileSystemEntit
       path: lastPrinter.path, entity: entityAt, list: entityAt.list
     );
 
-    resultsPrinters.add(printer);
+    _resultsPrinters.add(printer);
     printer.printResults();
+  }
+
+  @override
+  void printResults() => _resultsPrinters.last.printResults();
+
+  @override
+  Future<void> goUp() async {
+    if (_resultsPrinters.length == 1) {
+      print("Cant go back - start directory");
+      return;
+    }
+
+    _resultsPrinters.removeLast();
+    _resultsPrinters.last.printResults();
   }
 }

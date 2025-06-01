@@ -8,7 +8,7 @@ import 'package:big_files_scanner/eco_mode/entity/eco_sized_file_system_entity.d
 
 class EcoCounter extends AbstractCounter<EcoSizedFileSystemEntity> {
 
-  EcoCounter({required super.startPath});
+  final List<ResultsPrinter<EcoSizedFileSystemEntity>> _resultsPrinters = [];
 
   @override
   Future<void> calculate(Directory directory) async {
@@ -22,12 +22,12 @@ class EcoCounter extends AbstractCounter<EcoSizedFileSystemEntity> {
 
     final startEntity = EcoSizedFileSystemEntity.sized(entity: directory, size: totalSize);
 
-    resultsPrinters.add(ResultsPrinter(path: directory.path, entity: startEntity, list: list));
+    _resultsPrinters.add(ResultsPrinter(path: directory.path, entity: startEntity, list: list));
   }
 
   @override
   Future<void> goTo(int at) async {
-    final entityAt = resultsPrinters.last.getEntityAt(at);
+    final entityAt = _resultsPrinters.last.getEntityAt(at);
     if (entityAt == null) {
       print("Invalid index");
       return;
@@ -37,7 +37,23 @@ class EcoCounter extends AbstractCounter<EcoSizedFileSystemEntity> {
       return;
     }
 
-    await calculateSize(entityAt.entity.path);
+    await calculateSize(entityAt.path);
   }
+
+  @override
+  Future<void> goUp() async {
+    final current = _resultsPrinters.removeLast();
+
+    if (_resultsPrinters.isEmpty) {
+      final parent = Directory(current.entity.path).parent;
+
+      await calculateSize(parent.path);
+    } else {
+      _resultsPrinters.last.printResults();
+    }
+  }
+  
+  @override
+  void printResults() => _resultsPrinters.last.printResults();
 
 }

@@ -3,15 +3,8 @@
 import 'dart:io';
 
 import 'package:big_files_scanner/core/models/abstract_file_entity.dart';
-import 'package:big_files_scanner/core/results_printer.dart';
 
 abstract class AbstractCounter<T extends AbstractFileEntity> {
-
-  final String startPath;
-
-  final List<ResultsPrinter<T>> resultsPrinters = [];
-
-  AbstractCounter({required this.startPath});
 
   Future<bool> calculateSize(String path) async {
     final directory = Directory(path);
@@ -31,22 +24,14 @@ abstract class AbstractCounter<T extends AbstractFileEntity> {
     return true;
   }
 
-  void printResults() => resultsPrinters.last.printResults();
-
-  void goUp() {
-    if (resultsPrinters.length == 1) {
-      print("Cant go back - start directory");
-      return;
-    }
-
-    resultsPrinters.removeLast();
-    resultsPrinters.last.printResults();
-  }
-
   /// override this
   Future<void> calculate(Directory directory);
 
   Future<void> goTo(int at);
+
+  Future<void> goUp();
+  
+  void printResults();
 }
 
 enum CounterType {

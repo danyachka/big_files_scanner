@@ -73,6 +73,11 @@ void printHelp() {
 
 extension FileExtention on FileSystemEntity {
   String get name {
-    return path.split(RegExp("/|\\\\")).last;
+    return getLastPartOfPath(path);
   }
 }
+
+String getLastPartOfPath(String path) {
+  return path.split(RegExp("/|\\\\")).last;
+}
+
